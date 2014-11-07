@@ -1,0 +1,28 @@
+<%= display_error %>
+<form class="form-horizontal" id="login-form" action="/login" method="post">
+  <fieldset>
+    <center><legend>Log In</legend></center>
+
+    <div class="form-group">
+      <label for="inputEmail" class="col-lg-2 control-label">Username</label>
+      <div class="col-md-5">
+        <input type="text" class="form-control" id="inputEmail" placeholder="username" name="username">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="inputPassword" class="col-lg-2 control-label">Password</label>
+      <div class="col-md-5">
+        <input type="password" class="form-control" id="inputPassword" placeholder="Password" name="password">
+      </div>
+    </div>
+
+
+    <div class="form-group">
+      <div class="col-lg-10 col-lg-offset-2">
+        <button class="btn btn-default">Cancel</button>
+        <button type="submit" class="btn btn-primary">LogIn!</button>
+      </div>
+    </div>
+  </fieldset>
+</form>
