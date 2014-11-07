@@ -15,7 +15,7 @@ var Player = function(name) {
     this.lives = 3;
     this.x = Math.random()*100;
     this.y = Math.random()*100;
-    // this.damageTaken = 
+    // this.damageTaken =
 };
 var platforms;
 var cursors;
@@ -57,8 +57,8 @@ function create() {
     ledge.body.immovable = true;
 
     //diamond
+    x = game.input.keyboard.addKey(88);
 
-    diamond = game.add.sprite(32, game.world.height - 150, 'diamond')
 
     // The player and its settings
     playerOneView = game.add.sprite(32, game.world.height - 150, 'dude');
@@ -111,12 +111,17 @@ function create() {
         s: game.input.keyboard.addKey(83),
         d: game.input.keyboard.addKey(68),
 
-    }
+    };
     cursors = game.input.keyboard.createCursorKeys();
     console.log(playerTwoKeys);
 }
 
 function update() {
+
+    if (x.isDown) {
+        game.add.sprite(32, game.world.height - 150, 'diamond');
+        console.log("HERE!");
+    }
 
     //  Collide the player and the stars with the platforms
     game.physics.arcade.collide(playerOneView, platforms);
@@ -129,7 +134,7 @@ function update() {
     //  Reset the players velocity (movement)
     playerOneView.body.velocity.x = 0;
     playerTwoView.body.velocity.x = 0;
-    
+
 
     //////////////////////
     ///   Player One   ///
@@ -156,7 +161,7 @@ function update() {
 
         playerOneView.frame = 4;
     }
-    
+
     //  Allow the player to jump if they are touching the ground.
     if (cursors.up.isDown && playerOneView.body.touching.down)
     {
@@ -188,7 +193,7 @@ function update() {
 
         playerTwoView.frame = 4;
     }
-    
+
     //  Allow the player to jump if they are touching the ground.
     if (playerTwoKeys.w.isDown && playerTwoView.body.touching.down)
     {
@@ -198,7 +203,7 @@ function update() {
 }
 
 function collectStar (player, star) {
-    
+
     // Removes the star from the screen
     star.kill();
 
@@ -209,5 +214,5 @@ function collectStar (player, star) {
 }
 
 function throwProjectile () {
-    
+
 }
