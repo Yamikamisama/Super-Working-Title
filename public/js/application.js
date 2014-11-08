@@ -25,7 +25,6 @@ var Player = function(name, x) {
 };
 
 function setPlayer (settings) {
-    console.log(settings);
     playerView = game.add.sprite(settings.x, game.world.height - 150, 'dude');
     game.physics.arcade.enable(playerView);
     playerView.body.bounce.y = settings.bounce;
@@ -47,9 +46,6 @@ var diamondTime = 0;
 var diamond;
 
 function create() {
-
-
-
     //  We're going to be using physics, so enable the Arcade Physics system
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -78,10 +74,14 @@ function create() {
     ledge = platforms.create(-150, 250, 'ground');
     ledge.body.immovable = true;
 
+    ledge = platforms.create(500, 300, 'ground');
+    ledge.body.immovable = true;
+
     playerOneView = setPlayer(playerOne.settings);
     playerTwoView = setPlayer(playerTwo.settings);
 
     //  Our two animations, walking left and right.
+
     playerOneView.animations.add('left', [0, 1, 2, 3], 10, true);
     playerOneView.animations.add('right', [5, 6, 7, 8], 10, true);
 
@@ -107,6 +107,16 @@ function create() {
         star.body.bounce.y = 0.7 + Math.random() * 0.2;
     }
 
+    diamonds = game.add.group();
+    diamonds.enableBody = true;
+
+    // diamonds.physicsBodyType = Phaser.Physics.ARCADE;
+    // diamonds.createMultiple(30, 'diamond', 0, false);
+    // diamonds.setAll('anchor.x', playerOneView.body.x);
+    // diamonds.setAll('anchor.y', playerOneView.body.y);
+    // diamonds.setAll('outOfBoundsKill', true);
+    // diamonds.setAll('checkWorldBounds', true);
+
     //  The score
     scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
@@ -123,20 +133,6 @@ function create() {
     //diamond
     x = game.input.keyboard.addKey(88);
 
-    diamonds = game.add.group();
-    diamonds.enableBody = true;
-    diamonds.physicsBodyType = Phaser.Physics.AUTO;
-    diamonds.createMultiple(1, 'diamond');
-    diamonds.setAll('anchor.x', playerOneView.body.x);
-    diamonds.setAll('anchor.y', playerOneView.body.y);
-    diamonds.setAll('outOfBoundsKill', true);
-    diamonds.setAll('checkWorldBounds', true);
-
-    diamond = game.add.sprite(playerOneView.body.x, playerOneView.body.y, 'diamond');
-    diamond.enableBody = true;
-    diamond.physicsBodyType = Phaser.Physics.AUTO;
-
-
 }
 
 function update() {
@@ -145,11 +141,17 @@ function update() {
         //console.log(diamond.body);
         fireDiamond();
     }
+    // if (x.isDown) {
+    //     var diamond = diamonds.create(playerOneView.x, playerTwoView.y, 'diamond');
+    //     diamond.body.velocity.x = -400;
+    // }
 
     //  Collide the player and the stars with the platforms
     game.physics.arcade.collide(playerOneView, platforms);
     game.physics.arcade.collide(playerTwoView, platforms);
     game.physics.arcade.collide(stars, platforms);
+    // Collidin the two players
+    game.physics.arcade.collide(playerOneView, playerTwoView);
 
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     game.physics.arcade.overlap(playerOneView, stars, collectStar, null, this);
@@ -239,16 +241,15 @@ function collectStar (player, star) {
 function fireDiamond() {
     if (game.time.now > diamondTime){
         //  Grab the first diamond we can from the pool
-        diamond = diamonds.getFirstExists(false);
-        if (diamond){
-            //  And fire it
-            console.log("diamond:")
-            console.log(diamond);
-            // game.add.sprite(playerOneView.body.x, playerOneView.body.y, 'diamond');
-            diamond.reset(playerOneView.body.x, playerOneView.body.y + 8);
-            diamond.body.velocity.x = 30;
-            diamondTime = game.time.now + 200;
-        }
+        var diamond = diamonds.create(playerOneView.x, playerTwoView.y, 'diamond');
+        diamond.body.velocity.x = -400;
+        // diamond = diamonds.getFirstExists(false);
+        // if (diamond){
+        // And fire it
+        // diamond.reset(playerOneView.x, playerOneView.y + 8);
+        //     diamond.body.velocity.x = -400;
+        // }
+        diamondTime = game.time.now + 200;
     }
 
     console.log("ends");
