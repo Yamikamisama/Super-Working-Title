@@ -23,10 +23,15 @@ var cursors;
 var stars;
 var score = 0;
 var scoreText;
-var playerOne = new Player('one')
-var playerTwo = new Player('two')
+var playerOne = new Player('one');
+var playerTwo = new Player('two');
+var diamonds;
+var diamondTime = 0;
+var diamond;
 
 function create() {
+
+
 
     //  We're going to be using physics, so enable the Arcade Physics system
     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -56,8 +61,7 @@ function create() {
     ledge = platforms.create(-150, 250, 'ground');
     ledge.body.immovable = true;
 
-    //diamond
-    x = game.input.keyboard.addKey(88);
+
 
 
     // The player and its settings
@@ -113,14 +117,31 @@ function create() {
 
     };
     cursors = game.input.keyboard.createCursorKeys();
-    console.log(playerTwoKeys);
+
+    //diamond
+    x = game.input.keyboard.addKey(88);
+
+    diamonds = game.add.group();
+    diamonds.enableBody = true;
+    diamonds.physicsBodyType = Phaser.Physics.AUTO;
+    diamonds.createMultiple(1, 'diamond');
+    diamonds.setAll('anchor.x', playerOneView.body.x);
+    diamonds.setAll('anchor.y', playerOneView.body.y);
+    diamonds.setAll('outOfBoundsKill', true);
+    diamonds.setAll('checkWorldBounds', true);
+
+    diamond = game.add.sprite(playerOneView.body.x, playerOneView.body.y, 'diamond');
+    diamond.enableBody = true;
+    diamond.physicsBodyType = Phaser.Physics.AUTO;
+
+
 }
 
 function update() {
 
     if (x.isDown) {
-        game.add.sprite(32, game.world.height - 150, 'diamond');
-        console.log("HERE!");
+        //console.log(diamond.body);
+        fireDiamond();
     }
 
     //  Collide the player and the stars with the platforms
@@ -213,6 +234,20 @@ function collectStar (player, star) {
 
 }
 
-function throwProjectile () {
+function fireDiamond() {
+    if (game.time.now > diamondTime){
+        //  Grab the first diamond we can from the pool
+        diamond = diamonds.getFirstExists(false);
+        if (diamond){
+            //  And fire it
+            console.log("diamond:")
+            console.log(diamond);
+            // game.add.sprite(playerOneView.body.x, playerOneView.body.y, 'diamond');
+            diamond.reset(playerOneView.body.x, playerOneView.body.y + 8);
+            diamond.body.velocity.x = 30;
+            diamondTime = game.time.now + 200;
+        }
+    }
 
+    console.log("ends");
 }
