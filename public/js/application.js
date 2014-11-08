@@ -10,21 +10,38 @@ function preload() {
 
 }
 
-var Player = function(name) {
+var Player = function(name, x) {
     this.name = name;
     this.lives = 3;
-    this.x = Math.random()*100;
-    this.y = Math.random()*100;
+    // this.x = Math.random()*100;
+    // this.y = Math.random()*100;
     // this.damageTaken =
+    this.settings = {
+        x: x,
+        bounce: 0.2,
+        gravity: 300,
+        collideWorldBounds: true
+    };
 };
+
+function setPlayer (settings) {
+    console.log(settings);
+    playerView = game.add.sprite(settings.x, game.world.height - 150, 'dude');
+    game.physics.arcade.enable(playerView);
+    playerView.body.bounce.y = settings.bounce;
+    playerView.body.gravity.y = settings.gravity;
+    playerView.body.collideWorldBounds = settings.collideWorldBounds;
+    return playerView;
+}
+
 var platforms;
 var cursors;
 
 var stars;
 var score = 0;
 var scoreText;
-var playerOne = new Player('one');
-var playerTwo = new Player('two');
+var playerOne = new Player('one', 700);
+var playerTwo = new Player('two', 32);
 var diamonds;
 var diamondTime = 0;
 var diamond;
@@ -61,23 +78,8 @@ function create() {
     ledge = platforms.create(-150, 250, 'ground');
     ledge.body.immovable = true;
 
-
-
-
-    // The player and its settings
-    playerOneView = game.add.sprite(32, game.world.height - 150, 'dude');
-    playerTwoView = game.add.sprite(79, game.world.height - 150, 'dude');
-    //  We need to enable physics on the player
-    game.physics.arcade.enable(playerOneView);
-    game.physics.arcade.enable(playerTwoView);
-    //  Player physics properties. Give the little guy a slight bounce.
-    playerOneView.body.bounce.y = 0.2;
-    playerOneView.body.gravity.y = 300;
-    playerOneView.body.collideWorldBounds = true;
-
-    playerTwoView.body.bounce.y = 0.2;
-    playerTwoView.body.gravity.y = 300;
-    playerTwoView.body.collideWorldBounds = true;
+    playerOneView = setPlayer(playerOne.settings);
+    playerTwoView = setPlayer(playerTwo.settings);
 
     //  Our two animations, walking left and right.
     playerOneView.animations.add('left', [0, 1, 2, 3], 10, true);
