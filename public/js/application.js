@@ -110,13 +110,6 @@ function create() {
     diamonds = game.add.group();
     diamonds.enableBody = true;
 
-    // diamonds.physicsBodyType = Phaser.Physics.ARCADE;
-    // diamonds.createMultiple(30, 'diamond', 0, false);
-    // diamonds.setAll('anchor.x', playerOneView.body.x);
-    // diamonds.setAll('anchor.y', playerOneView.body.y);
-    // diamonds.setAll('outOfBoundsKill', true);
-    // diamonds.setAll('checkWorldBounds', true);
-
     //  The score
     scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
@@ -132,14 +125,18 @@ function create() {
 
     //diamond
     x = game.input.keyboard.addKey(88);
-
+    n = game.input.keyboard.addKey(78);
 }
 
 function update() {
 
     if (x.isDown) {
         //console.log(diamond.body);
-        fireDiamond();
+        fireDiamondOne();
+    }
+
+    if (n.isDown){
+        fireDiamondTwo();
     }
     // if (x.isDown) {
     //     var diamond = diamonds.create(playerOneView.x, playerTwoView.y, 'diamond');
@@ -238,19 +235,18 @@ function collectStar (player, star) {
 
 }
 
-function fireDiamond() {
+function fireDiamondOne() {
     if (game.time.now > diamondTime){
-        //  Grab the first diamond we can from the pool
-        var diamond = diamonds.create(playerOneView.x, playerTwoView.y, 'diamond');
-        diamond.body.velocity.x = -400;
-        // diamond = diamonds.getFirstExists(false);
-        // if (diamond){
-        // And fire it
-        // diamond.reset(playerOneView.x, playerOneView.y + 8);
-        //     diamond.body.velocity.x = -400;
-        // }
+        var diamond = diamonds.create(playerTwoView.x, playerTwoView.y, 'diamond');
+        diamond.body.velocity.x = 400;
         diamondTime = game.time.now + 200;
     }
+}
 
-    console.log("ends");
+function fireDiamondTwo() {
+    if (game.time.now > diamondTime){
+        var diamond = diamonds.create(playerOneView.x, playerOneView.y, 'diamond');
+        diamond.body.velocity.x = 400;
+        diamondTime = game.time.now + 200;
+    }
 }
