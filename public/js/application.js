@@ -144,7 +144,8 @@ function update() {
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     game.physics.arcade.overlap(playerOneView, stars, collectStar, null, this);
     game.physics.arcade.overlap(playerTwoView, stars, collectStar, null, this);
-    game.physics.arcade.overlap(diamonds, platforms, collisionHandler, null, this);
+    game.physics.arcade.overlap(diamondsOne, platforms, collisionHandler, null, this);
+    game.physics.arcade.overlap(diamondsTwo, platforms, collisionHandler, null, this);
     game.physics.arcade.overlap(playerOneView, diamondsTwo, playerHit, null, this);
     game.physics.arcade.overlap(playerTwoView, diamondsOne, playerHit, null, this);
 
