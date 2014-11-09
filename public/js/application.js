@@ -137,8 +137,8 @@ function update() {
     game.physics.arcade.collide(playerOneView, playerTwoView);
 
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-    game.physics.arcade.overlap(playerOneView, stars, collectStar, null, this);
-    game.physics.arcade.overlap(playerTwoView, stars, collectStar, null, this);
+    game.physics.arcade.overlap(playerOneView, stars, collectStar);
+    game.physics.arcade.overlap(playerTwoView, stars, collectStar);
     //  Reset the players velocity (movement)
     playerOneView.body.velocity.x = 0;
     playerTwoView.body.velocity.x = 0;
@@ -222,28 +222,40 @@ function update() {
 
 function collectStar (player, star) {
 
-    // Removes the star from the screen
-    star.kill();
+  // Removes the star from the screen
+  star.kill();
 
-    //  Add and update the score
-    score += 10;
-    scoreText.text = 'Score: ' + score;
+  //  Add and update the score
+  score += 10;
+  scoreText.text = 'Score: ' + score;
 
 }
 
 function fireOne() {
-    if (game.time.now > diamondTime){
-        var diamond = diamonds.create(playerOneView.x, playerOneView.y, 'diamond');
+  if (game.time.now > diamondTime){
+    var diamond = diamonds.create(playerOneView.x, playerOneView.y, 'diamond');
+    if(playerOneView.animations.currentFrame.index>=5){
         diamond.body.velocity.x = 400;
-        diamondTime = game.time.now + 200;
+    }else if (playerOneView.animations.currentFrame.index<=3) {
+        diamond.body.velocity.x = -400;
+    }else{
+        diamond.body.velocity.y = -400;
     }
+    diamondTime = game.time.now + 200;
+  }
 }
 
 function fireTwo() {
-    if (game.time.now > diamondTime){
-        var diamond = diamonds.create(playerTwoView.x, playerTwoView.y, 'diamond');
+  if (game.time.now > diamondTime){
+    var diamond = diamonds.create(playerTwoView.x, playerTwoView.y, 'diamond');
+    if(playerTwoView.animations.currentFrame.index>=5){
         diamond.body.velocity.x = 400;
-        diamondTime = game.time.now + 200;
+    }else if (playerTwoView.animations.currentFrame.index<=3) {
+        diamond.body.velocity.x = -400;
+    }else{
+        diamond.body.velocity.y = -400;
     }
+    diamondTime = game.time.now + 200;
+  }
 }
 
