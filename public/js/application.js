@@ -5,7 +5,7 @@ function preload() {
     game.load.image('sky', 'assets/world.png');
     game.load.image('ground', 'assets/platform.png');
     game.load.image('star', 'assets/ruby.png');
-    game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+    game.load.spritesheet('dude', 'assets/bmage.png', 32, 48);
     game.load.image('diamond', 'assets/wind.png');
 
 }
