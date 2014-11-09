@@ -45,6 +45,8 @@ var diamonds;
 var diamondTime = 0;
 var diamond;
 
+
+
 function create() {
     //  We're going to be using physics, so enable the Arcade Physics system
     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -107,8 +109,11 @@ function create() {
         star.body.bounce.y = 0.7 + Math.random() * 0.2;
     }
 
-    diamonds = game.add.group();
-    diamonds.enableBody = true;
+    diamondsOne = game.add.group();
+    diamondsOne.enableBody = true;
+
+    diamondsTwo = game.add.group();
+    diamondsTwo.enableBody = true;
 
     //  The score
     scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
@@ -137,8 +142,13 @@ function update() {
     game.physics.arcade.collide(playerOneView, playerTwoView);
 
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-    game.physics.arcade.overlap(playerOneView, stars, collectStar);
-    game.physics.arcade.overlap(playerTwoView, stars, collectStar);
+    game.physics.arcade.overlap(playerOneView, stars, collectStar, null, this);
+    game.physics.arcade.overlap(playerTwoView, stars, collectStar, null, this);
+    game.physics.arcade.overlap(diamonds, platforms, collisionHandler, null, this);
+    game.physics.arcade.overlap(playerOneView, diamondsTwo, playerHit, null, this);
+    game.physics.arcade.overlap(playerTwoView, diamondsOne, playerHit, null, this);
+
+
     //  Reset the players velocity (movement)
     playerOneView.body.velocity.x = 0;
     playerTwoView.body.velocity.x = 0;
@@ -179,6 +189,7 @@ function update() {
     if (x.isDown) {
         //console.log(diamond.body);
         fireOne();
+
     }
 
     //////////////////////
@@ -233,7 +244,7 @@ function collectStar (player, star) {
 
 function fireOne() {
   if (game.time.now > diamondTime){
-    var diamond = diamonds.create(playerOneView.x, playerOneView.y, 'diamond');
+    var diamond = diamondsOne.create(playerOneView.x, playerOneView.y, 'diamond');
     if(playerOneView.animations.currentFrame.index>=5){
         diamond.body.velocity.x = 400;
     }else if (playerOneView.animations.currentFrame.index<=3) {
@@ -247,7 +258,7 @@ function fireOne() {
 
 function fireTwo() {
   if (game.time.now > diamondTime){
-    var diamond = diamonds.create(playerTwoView.x, playerTwoView.y, 'diamond');
+    var diamond = diamondsTwo.create(playerTwoView.x, playerTwoView.y, 'diamond');
     if(playerTwoView.animations.currentFrame.index>=5){
         diamond.body.velocity.x = 400;
     }else if (playerTwoView.animations.currentFrame.index<=3) {
@@ -259,3 +270,11 @@ function fireTwo() {
   }
 }
 
+function collisionHandler (diamond, platform) {
+    diamond.kill();
+}
+
+function playerHit (player, diamond) {
+    diamond.kill();
+    player.kill();
+}
