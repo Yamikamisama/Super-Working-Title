@@ -39,8 +39,8 @@ var cursors;
 var stars;
 var score = 0;
 var scoreText;
-var playerOne = new Player('one', 700);
-var playerTwo = new Player('two', 32);
+var playerOne = new Player('one', 32);
+var playerTwo = new Player('two', 700);
 var diamonds;
 var diamondTime = 0;
 var diamond;
@@ -114,7 +114,7 @@ function create() {
     scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
     //  Our controls.
-    playerTwoKeys = {
+    playerOneKeys = {
         w: game.input.keyboard.addKey(87),
         a: game.input.keyboard.addKey(65),
         s: game.input.keyboard.addKey(83),
@@ -123,31 +123,17 @@ function create() {
     };
     cursors = game.input.keyboard.createCursorKeys();
 
-    //diamond
+    //Firing keys
     x = game.input.keyboard.addKey(88);
     n = game.input.keyboard.addKey(78);
 }
 
 function update() {
-
-    if (x.isDown) {
-        //console.log(diamond.body);
-        fireDiamondOne();
-    }
-
-    if (n.isDown){
-        fireDiamondTwo();
-    }
-    // if (x.isDown) {
-    //     var diamond = diamonds.create(playerOneView.x, playerTwoView.y, 'diamond');
-    //     diamond.body.velocity.x = -400;
-    // }
-
     //  Collide the player and the stars with the platforms
     game.physics.arcade.collide(playerOneView, platforms);
     game.physics.arcade.collide(playerTwoView, platforms);
     game.physics.arcade.collide(stars, platforms);
-    // Collidin the two players
+    // Collide the two players
     game.physics.arcade.collide(playerOneView, playerTwoView);
 
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
@@ -162,14 +148,14 @@ function update() {
     ///   Player One   ///
     //////////////////////
 
-    if (cursors.left.isDown)
-    {
+
+    if (playerOneKeys.a.isDown){
         //  Move to the left
         playerOneView.body.velocity.x = -150;
 
         playerOneView.animations.play('left');
     }
-    else if (cursors.right.isDown)
+    else if (playerOneKeys.d.isDown)
     {
         //  Move to the right
         playerOneView.body.velocity.x = 150;
@@ -185,23 +171,29 @@ function update() {
     }
 
     //  Allow the player to jump if they are touching the ground.
-    if (cursors.up.isDown && playerOneView.body.touching.down)
+    if (playerOneKeys.w.isDown && playerOneView.body.touching.down)
     {
         playerOneView.body.velocity.y = -350;
+    }
+
+    if (x.isDown) {
+        //console.log(diamond.body);
+        fireOne();
     }
 
     //////////////////////
     ///   Player Two   ///
     //////////////////////
 
-        if (playerTwoKeys.a.isDown)
+
+    if (cursors.left.isDown)
     {
         //  Move to the left
         playerTwoView.body.velocity.x = -150;
 
         playerTwoView.animations.play('left');
     }
-    else if (playerTwoKeys.d.isDown)
+    else if (cursors.right.isDown)
     {
         //  Move to the right
         playerTwoView.body.velocity.x = 150;
@@ -217,9 +209,13 @@ function update() {
     }
 
     //  Allow the player to jump if they are touching the ground.
-    if (playerTwoKeys.w.isDown && playerTwoView.body.touching.down)
+    if (cursors.up.isDown && playerTwoView.body.touching.down)
     {
         playerTwoView.body.velocity.y = -350;
+    }
+
+    if (n.isDown){
+        fireTwo();
     }
 
 }
@@ -235,7 +231,15 @@ function collectStar (player, star) {
 
 }
 
-function fireDiamondOne() {
+function fireOne() {
+    if (game.time.now > diamondTime){
+        var diamond = diamonds.create(playerOneView.x, playerOneView.y, 'diamond');
+        diamond.body.velocity.x = 400;
+        diamondTime = game.time.now + 200;
+    }
+}
+
+function fireTwo() {
     if (game.time.now > diamondTime){
         var diamond = diamonds.create(playerTwoView.x, playerTwoView.y, 'diamond');
         diamond.body.velocity.x = 400;
@@ -243,10 +247,3 @@ function fireDiamondOne() {
     }
 }
 
-function fireDiamondTwo() {
-    if (game.time.now > diamondTime){
-        var diamond = diamonds.create(playerOneView.x, playerOneView.y, 'diamond');
-        diamond.body.velocity.x = 400;
-        diamondTime = game.time.now + 200;
-    }
-}
