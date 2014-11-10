@@ -116,7 +116,7 @@ function create() {
     diamondsTwo.enableBody = true;
 
     //  The score
-    scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+    // scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
     //  Our controls.
     playerOneKeys = {
@@ -148,6 +148,7 @@ function update() {
     game.physics.arcade.overlap(diamondsTwo, platforms, collisionHandler, null, this);
     game.physics.arcade.overlap(playerOneView, diamondsTwo, playerHit, null, this);
     game.physics.arcade.overlap(playerTwoView, diamondsOne, playerHit, null, this);
+    game.physics.arcade.overlap(diamondsOne, diamondsTwo, diamondCollision, null, this);
 
 
     //  Reset the players velocity (movement)
@@ -238,8 +239,8 @@ function collectStar (player, star) {
   star.kill();
 
   //  Add and update the score
-  score += 10;
-  scoreText.text = 'Score: ' + score;
+  // score += 10;
+  // scoreText.text = 'Score: ' + score;
 
 }
 
@@ -273,6 +274,11 @@ function fireTwo() {
 
 function collisionHandler (diamond, platform) {
     diamond.kill();
+}
+
+function diamondCollision (diamondOne, diamondTwo) {
+    diamondOne.kill();
+    diamondTwo.kill();
 }
 
 function playerHit (player, diamond) {
